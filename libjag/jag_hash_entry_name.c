@@ -3,7 +3,7 @@
 #include <string.h>
 
 uint32_t
-jag_hash_entry_name(const char *)
+jag_hash_entry_name(const char *s)
 {
 	uint32_t hash = 0;
 	size_t i = 0;

@@ -14,7 +14,7 @@ jag_map_read_jm(struct jag_map *out, void *b, size_t len) {
 			return -1;
 		}
 		prev += val;
-		out->tiles[i++].terrain_height = val & 0xff;
+		out->tiles[i++].height = val & 0xff;
 	}
 
 	val = 0;
@@ -24,7 +24,7 @@ jag_map_read_jm(struct jag_map *out, void *b, size_t len) {
 			return -1;
 		}
 		prev += val;
-		out->tiles[i++].terrain_colour = val & 0xff;
+		out->tiles[i++].colour = val & 0xff;
 	}
 
 	for (i = 0; i < JAG_MAP_CHUNK_AREA;) {

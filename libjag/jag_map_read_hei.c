@@ -14,11 +14,11 @@ jag_map_read_hei(struct jag_map *out, void *b, size_t len) {
 			return -1;
 		}
 		if (val < 128) {
-			out->tiles[i++].terrain_height = val;
+			out->tiles[i++].height = val;
 			prev = val;
 		} else {
 			for (j = 0; j < (val - 128); ++j) {
-				out->tiles[i++].terrain_height = prev & 0xff;
+				out->tiles[i++].height = prev & 0xff;
 			}
 		}
 	}
@@ -29,8 +29,8 @@ jag_map_read_hei(struct jag_map *out, void *b, size_t len) {
 		for (y = 0; y < JAG_MAP_CHUNK_SIZE; ++y) {
 			i = x * JAG_MAP_CHUNK_SIZE + y;
 
-			prev = (out->tiles[i].terrain_height + prev) & 127;
-			out->tiles[i].terrain_height = prev * 2;
+			prev = (out->tiles[i].height + prev) & 127;
+			out->tiles[i].height = prev * 2;
 		}
 	}
 
@@ -41,11 +41,11 @@ jag_map_read_hei(struct jag_map *out, void *b, size_t len) {
 			return -1;
 		}
 		if (val < 128) {
-			out->tiles[i++].terrain_colour = val;
+			out->tiles[i++].colour = val;
 			prev = val;
 		} else {
 			for (j = 0; j < (val - 128); ++j) {
-				out->tiles[i++].terrain_colour = prev & 0xff;
+				out->tiles[i++].colour = prev & 0xff;
 			}
 		}
 	}
@@ -56,8 +56,8 @@ jag_map_read_hei(struct jag_map *out, void *b, size_t len) {
 		for (y = 0; y < JAG_MAP_CHUNK_SIZE; ++y) {
 			i = x * JAG_MAP_CHUNK_SIZE + y;
 
-			prev = (out->tiles[i].terrain_colour + prev) & 127;
-			out->tiles[i].terrain_colour = prev * 2;
+			prev = (out->tiles[i].colour + prev) & 127;
+			out->tiles[i].colour = prev * 2;
 		}
 	}
 
