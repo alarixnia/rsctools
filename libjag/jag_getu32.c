@@ -4,7 +4,8 @@ int
 jag_getu32(void *b, size_t offset, size_t buflen, uint32_t *out)
 {
 	uint8_t *buffer = b;
-	if (offset > (SIZE_MAX - 4) || (buflen - offset) < 4) {
+	if (offset > (SIZE_MAX - 4) ||
+	    ((ptrdiff_t)buflen - (ptrdiff_t)offset) < 4) {
 		return -1;
 	}
 	*out = ((buffer[offset] & 0xff) << 24) |
