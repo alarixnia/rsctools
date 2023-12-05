@@ -11,7 +11,7 @@ jag_hash_entry_name(const char *s)
 
 	len = strlen(s);
 	for (i = 0; i < len; ++i) {
-		hash = (hash * 61 + toupper(s[i])) - 32;
+		hash = hash * 61 + toupper((unsigned char)s[i]) - 32;
 	}
 	return hash;
 }
