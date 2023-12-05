@@ -6,6 +6,12 @@
 #define JAG_MAP_CHUNK_SIZE	(48)
 #define JAG_MAP_CHUNK_AREA	(48*48)
 
+/* increment for inverse diagonal boundaries */
+#define JAG_MAP_DIAG_INVERSE	(12000)
+
+/* increment for locs stored inside bound_diag */
+#define JAG_MAP_DIAG_LOC	(48000)
+
 struct jag_tile {
 	uint8_t height;
 	uint8_t colour;
