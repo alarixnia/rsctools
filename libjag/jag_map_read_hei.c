@@ -10,7 +10,7 @@ jag_map_read_hei(struct jag_map *out, void *b, size_t len) {
 	unsigned x, y;
 
 	for (i = 0; i < JAG_MAP_CHUNK_AREA;) {
-		if (jag_getu8(b, offset, len, &val) != 0) {
+		if (jag_getu8(b, offset++, len, &val) != 0) {
 			return -1;
 		}
 		if (val < 128) {
@@ -37,7 +37,7 @@ jag_map_read_hei(struct jag_map *out, void *b, size_t len) {
 	prev = 0;
 
 	for (i = 0; i < JAG_MAP_CHUNK_AREA;) {
-		if (jag_getu8(b, offset, len, &val) != 0) {
+		if (jag_getu8(b, offset++, len, &val) != 0) {
 			return -1;
 		}
 		if (val < 128) {

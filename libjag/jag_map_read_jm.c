@@ -10,7 +10,7 @@ jag_map_read_jm(struct jag_map *out, void *b, size_t len) {
 	unsigned i;
 
 	for (i = 0; i < JAG_MAP_CHUNK_AREA;) {
-		if (jag_getu8(b, offset, len, &val) != 0) {
+		if (jag_getu8(b, offset++, len, &val) != 0) {
 			return -1;
 		}
 		prev += val;
@@ -20,7 +20,7 @@ jag_map_read_jm(struct jag_map *out, void *b, size_t len) {
 	val = 0;
 
 	for (i = 0; i < JAG_MAP_CHUNK_AREA;) {
-		if (jag_getu8(b, offset, len, &val) != 0) {
+		if (jag_getu8(b, offset++, len, &val) != 0) {
 			return -1;
 		}
 		prev += val;
@@ -28,14 +28,14 @@ jag_map_read_jm(struct jag_map *out, void *b, size_t len) {
 	}
 
 	for (i = 0; i < JAG_MAP_CHUNK_AREA;) {
-		if (jag_getu8(b, offset, len, &val) != 0) {
+		if (jag_getu8(b, offset++, len, &val) != 0) {
 			return -1;
 		}
 		out->tiles[i++].bound_vert = val;
 	}
 
 	for (i = 0; i < JAG_MAP_CHUNK_AREA;) {
-		if (jag_getu8(b, offset, len, &val) != 0) {
+		if (jag_getu8(b, offset++, len, &val) != 0) {
 			return -1;
 		}
 		out->tiles[i++].bound_horiz = val;
@@ -46,24 +46,25 @@ jag_map_read_jm(struct jag_map *out, void *b, size_t len) {
 			return -1;
 		}
 		out->tiles[i++].bound_diag = val_big;
+		offset += 2;
 	}
 
 	for (i = 0; i < JAG_MAP_CHUNK_AREA;) {
-		if (jag_getu8(b, offset, len, &val) != 0) {
+		if (jag_getu8(b, offset++, len, &val) != 0) {
 			return -1;
 		}
 		out->tiles[i++].roof = val;
 	}
 
 	for (i = 0; i < JAG_MAP_CHUNK_AREA;) {
-		if (jag_getu8(b, offset, len, &val) != 0) {
+		if (jag_getu8(b, offset++, len, &val) != 0) {
 			return -1;
 		}
 		out->tiles[i++].overlay = val;
 	}
 
 	for (i = 0; i < JAG_MAP_CHUNK_AREA;) {
-		if (jag_getu8(b, offset, len, &val) != 0) {
+		if (jag_getu8(b, offset++, len, &val) != 0) {
 			return -1;
 		}
 		out->tiles[i++].loc_direction = val;
