@@ -19,6 +19,8 @@ struct jag_entry {
 	int must_free;
 };
 
+#define JAG_BZIP2_MAGIC			"BZh1"
+
 /* 2x 3-byte sizes */
 #define JAG_HEADER_SIZE			(6)
 
@@ -32,8 +34,8 @@ int jag_unpack_file(FILE *, struct jag_archive *);
 int jag_unpack_stream(void *, size_t, size_t, struct jag_archive *);
 
 /* high level functions, these return a jag_entry */
-void *jag_find_entry(struct jag_archive *, const char *, struct jag_entry *);
-void *jag_unpack_entry(struct jag_archive *, const char *, struct jag_entry *);
+int jag_find_entry(struct jag_archive *, const char *, struct jag_entry *);
+int jag_unpack_entry(struct jag_archive *, const char *, struct jag_entry *);
 
 /* low level functions */
 uint32_t jag_hash_entry_name(const char *);

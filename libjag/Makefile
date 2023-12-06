@@ -1,3 +1,4 @@
+OBJS+=	jag_find_entry.lo
 OBJS+=	jag_get_known_hash.lo
 OBJS+=	jag_get_known_name.lo
 OBJS+=	jag_getu16.lo
