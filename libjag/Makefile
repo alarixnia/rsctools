@@ -13,7 +13,6 @@ OBJS+=	jag_read_entry.lo
 OBJS+=	jag_read_header.lo
 OBJS+=	jag_unpack_file.lo
 OBJS+=	jag_unpack_stream.lo
-OBJS+=	bzip.lo
 
 LIBTOOL?=	libtool
 PREFIX?=	/usr/local
