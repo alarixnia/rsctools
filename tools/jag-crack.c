@@ -12,7 +12,7 @@ static void guess_letter(uint32_t, char *, const char *,
     size_t, unsigned, size_t, int);
 static void usage(void);
 
-static int tries = 0;
+static unsigned long long tries = 0;
 
 static void
 guess_letter(uint32_t hash, char *filename,
@@ -33,16 +33,15 @@ guess_letter(uint32_t hash, char *filename,
 		}
 		filename[name_idx] = dictionary[i];
 		memcpy(filename + name_idx + 1, extension, extension_len);
-		if ((tries % 1000000) == 0) {
+		if ((tries % 10000000) == 0) {
 			fprintf(stderr,
-			    "jag-crack: %d attempts %s\n", tries, filename);
+			    "jag-crack: %llu attempts %s\n", tries, filename);
 		}
 		tries++;
 		new_hash = jag_hash_entry_name(filename);
 		if (hash == new_hash) {
 			printf("FOUND MATCH\n");
 			printf("%u = %s\n", (unsigned int)new_hash, filename);
-			exit(0);
 		}
 		if (name_idx > 0) {
 			for (j = 0; j < name_idx; ++j) {
