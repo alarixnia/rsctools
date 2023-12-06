@@ -3,6 +3,7 @@ UNJAG_OBJS+=	unjag.o
 KNOWN_HASHES_OBJS+=	jag-known-hashes.o
 
 CFLAGS+=	-Og -g
+CFLAGS+=	-Wall
 CFLAGS+=	-fsanitize=undefined
 
 CPPFLAGS+=	-I../include

@@ -18,6 +18,8 @@ OBJS+=	jag_unpack_stream.lo
 LIBTOOL?=	libtool
 PREFIX?=	/usr/local
 
+CFLAGS+=	-Wall
+
 CPPFLAGS+=	-I../include
 
 LIBS+=		-lbz2

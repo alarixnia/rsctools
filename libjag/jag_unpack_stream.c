@@ -24,6 +24,11 @@ jag_unpack_stream(void *buf, size_t off, size_t len, struct jag_archive *out)
 		return 0;
 	}
 
+	if ((packed_data = malloc(out->packed_len +
+	    sizeof(JAG_BZIP2_MAGIC) - 1)) == NULL) {
+		goto fail;
+	}
+
 	/* fake a bzip2 header to satisfy the library */
 	memcpy(packed_data, JAG_BZIP2_MAGIC, sizeof(JAG_BZIP2_MAGIC) - 1);
 
@@ -35,9 +40,9 @@ jag_unpack_stream(void *buf, size_t off, size_t len, struct jag_archive *out)
 		return -1;
 	}
 
-	bz.next_in = packed_data;
+	bz.next_in = (char *)packed_data;
 	bz.avail_in = out->packed_len + sizeof(JAG_BZIP2_MAGIC) - 1;
-	bz.next_out = unpacked_data;
+	bz.next_out = (char *)unpacked_data;
 	bz.avail_out = out->unpacked_len;
 
 	if (BZ2_bzDecompressInit(&bz, 0, 0) != BZ_OK) {

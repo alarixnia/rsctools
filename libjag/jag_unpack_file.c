@@ -55,9 +55,9 @@ jag_unpack_file(FILE *f, struct jag_archive *out)
 		goto fail;
 	}
 
-	bz.next_in = packed_data;
+	bz.next_in = (char *)packed_data;
 	bz.avail_in = out->packed_len + sizeof(JAG_BZIP2_MAGIC) - 1;
-	bz.next_out = unpacked_data;
+	bz.next_out = (char *)unpacked_data;
 	bz.avail_out = out->unpacked_len;
 
 	if (BZ2_bzDecompressInit(&bz, 0, 0) != BZ_OK) {
