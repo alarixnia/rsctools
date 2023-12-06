@@ -17,7 +17,7 @@ const char *file_names[] = {
     "secretdoor.pcm", "shoot.pcm", "spellfail.pcm", "spellok.pcm",
     "takeobject.pcm", "underattack.pcm", "victory.pcm", "h11p.jf", "h12b.jf",
     "h12p.jf", "h13b.jf", "h14b.jf", "h16b.jf", "h20b.jf", "h24b.jf",
-    "logo.tga", "books.txt", NULL
+    "logo.tga", "books.txt", "textures.txt", NULL
 };
 
 const char *media_names[] = {
@@ -51,15 +51,15 @@ const char *animation_names[] = {
 };
 
 const char *texture_names[] = {
-    "wall", "water", "wall", "planks", "wall", "wall", "roof", "wall",
-    "leafytree", "treestump", "fence", "mossy", "railings", "painting1",
-    "painting2", "marble", "deadtree", "fountain", "wall", "target", "books",
-    "timbered", "timbered", "mossybricks", "growingwheat", "gungywater",
-    "web", "wall", "wall", "cavern", "cavern2", "lava", "pentagram",
-    "mapletree", "yewtree", "helmet", "canvas", "chainmail2", "mummy",
-    "jungleleaf", "jungleleaf3", "jungleleaf4", "jungleleaf5", "jungleleaf6",
-    "mossybricks", "planks", "planks", "cargonet", "bark", "canvas", "canvas",
-    "wall", "cavern", "cavern2", "lava", NULL
+    "arrowslit", "bark", "books", "canvas", "cargonet", "cavern", "cavern2",
+    "chainmail2", "crumbled", "deadtree", "desertwindow", "door", "doorway",
+    "fence", "flames", "fountain", "growingwheat", "gungywater", "helmet",
+    "hole",  "jungleleaf", "jungleleaf3", "jungleleaf4", "jungleleaf5",
+    "jungleleaf6", "junglewindow", "lava", "leafytree", "lowcrumbled",
+    "mapletree", "marble", "mossy", "mossybricks", "mummy", "painting1",
+    "painting2", "pentagram", "planks", "railings", "roof", "stainedglass",
+    "target", "tentbottom", "tentdoor", "timbered", "timberwindow",
+    "treestump", "wall", "water", "web", "window", "yewtree", NULL
 };
 
 const char *model_names[] = {
