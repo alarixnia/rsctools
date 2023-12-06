@@ -12,6 +12,7 @@ OBJS+=	jag_map_read_jm.lo
 OBJS+=	jag_map_read_loc.lo
 OBJS+=	jag_read_entry.lo
 OBJS+=	jag_read_header.lo
+OBJS+=	jag_unpack_entry.lo
 OBJS+=	jag_unpack_file.lo
 OBJS+=	jag_unpack_stream.lo
 
