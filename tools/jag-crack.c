@@ -81,7 +81,7 @@ main(int argc, char **argv)
 {
 	long long hash;
 
-	if (argc < 2) {
+	if (argc < 3) {
 		usage();
 	}
 
