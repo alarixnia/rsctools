@@ -1,4 +1,6 @@
+#include <sys/stat.h>
 #include <errno.h>
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,6 +12,7 @@
 
 static int lflag = 0;
 static int vflag = 0;
+static char *target_path = NULL;
 
 static void extract_archive(FILE *);
 
@@ -66,19 +69,31 @@ extract_archive(FILE *f)
 			if (s != NULL) {
 				printf("%s\n", s);
 			} else {
-				printf("%d\n", entry.name_hash);
+				printf("%u\n", entry.name_hash);
 			}
 			continue;
 		}
 
-		if (s == NULL) {
-			snprintf(filename, sizeof(filename),
-			    "%d", entry.name_hash);
-			s = filename;
+		if (target_path != NULL) {
+			if (s == NULL) {
+				snprintf(filename, sizeof(filename),
+				    "%s/%d", target_path, entry.name_hash);
+			} else {
+				snprintf(filename, sizeof(filename),
+				    "%s/%s", target_path, s);
+			}
+		} else {
+			if (s == NULL) {
+				snprintf(filename, sizeof(filename),
+				    "%d", entry.name_hash);
+			} else {
+				snprintf(filename, sizeof(filename),
+				    "%s", s);
+			}
 		}
 
 		if (vflag) {
-			fprintf(stderr, "unjag: unpacking %s\n", s);
+			fprintf(stderr, "unjag: unpacking %s\n", filename);
 		}
 
 		entry.data = archive.data + packed_off;
@@ -93,11 +108,11 @@ extract_archive(FILE *f)
 			break;
 		}
 
-		FILE *out = fopen(s, "wb");
+		FILE *out = fopen(filename, "wb");
 		if (out == NULL) {
 			fprintf(stderr,
 			    "unjag: failed to open %s for writing: %s\n",
-			    s, strerror(errno));
+			    filename, strerror(errno));
 			exit(EXIT_FAILURE);
 		}
 
@@ -121,10 +136,28 @@ main(int argc, char **argv)
 	extern char *optarg;
 	extern int optind;
 	FILE *f = NULL;
-	int ch;
+	char ch;
+	int fd;
+	mode_t mode;
 
-	while ((ch = getopt(argc, argv, "lv")) != -1) {
+	while ((ch = getopt(argc, argv, "d:lv")) != -1) {
 		switch (ch) {
+		case 'd':
+			target_path = optarg;
+			fd = open(target_path, O_RDWR);
+			if (fd == -1) {
+				mode = (S_IRWXU | S_IRWXG | S_IRWXO) & ~umask(0);
+				mode = mode | S_IWUSR | S_IXUSR;
+				if (mkdir(target_path, mode) == -1) {
+					fprintf(stderr,
+					    "unjag: failed to create %s: %s\n",
+					    target_path, strerror(errno));
+					return EXIT_FAILURE;
+				}
+			} else {
+				close(fd);
+			}
+			break;
 	    	case 'l':
 			lflag = 1;
 			break;
