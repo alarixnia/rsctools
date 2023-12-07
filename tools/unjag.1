@@ -1,0 +1,37 @@
+.Dd December 7, 2023
+.Dt UNJAG 1
+.Os
+.Sh NAME
+.Nm unjag
+.Nd extract Jagex archives (RuneTek 1)
+.Sh SYNOPSIS
+.Nm
+.Op Fl d Ar directory
+.Op Fl l
+.Op Fl v
+.Ar jagfile
+.Sh DESCRIPTION
+.Nm
+is a program for extracting archives used by the RuneScape
+Classic game engine.
+The following options are available:
+.Bl -tag -width indent
+.It Fl d Ar path
+Used to specify a target directory, instead of extracting into the
+current working directory.
+.It Fl l
+Used to list files in the archive instead of extracting.
+.It Fl v
+Verbose output.
+.El
+.Sh SEE ALSO
+.Xr jag-crack 1 ,
+.Xr jag-known-hashes 1 ,
+.Xr unzip 1
+.Sh BUGS
+jag archives do not store exact file names, but rather a weak hash
+of the file name.
+Name collisions are trivially possible.
+A best effort guess is used to determine file names based on known file
+names used by RuneScape Classic, otherwise the numerical hash is used as
+an output file name.

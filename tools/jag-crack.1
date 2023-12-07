@@ -1,0 +1,21 @@
+.Dd December 7, 2023
+.Dt JAG-CRACK 1
+.Os
+.Sh NAME
+.Nm jag-crack
+.Nd attempt to guess Jagex archive file names
+.Sh SYNOPSIS
+.Nm
+.Ar hash
+.Ar extension
+.Sh DESCRIPTION
+.Nm
+is a program for computing Jagex archive file names.
+.Pp
+.Ar hash
+specifies the target hash to compute a possible file name for,
+while
+.Ar extension
+is a best guess at the extension of the file (to simplify guesses).
+.Sh SEE ALSO
+.Xr jag-known-hashes 1
