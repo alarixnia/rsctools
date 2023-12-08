@@ -165,7 +165,9 @@ const char *model_names[] = {
     "clawspell4", "clawspell5", "spellcharge2", "spellcharge3", "vine1",
     "vine2", "vineplant", "ogrerelic1", "ogrerelic2", "ogrerelic3",
     "ropeladderb", "fishingcranelow1", "fishingcranelow2",
-    "cave smashedcage", "grand tree1", "2-1light2", NULL
+    "cave smashedcage", "grand tree1", "2-1light2", "test",
+    "clockcog", "railings", "nails", "poweringcrystal", "sandpile",
+    "waterpool", "ogrerelic", "watersquare", "rockcake", NULL
 };
 
 int
