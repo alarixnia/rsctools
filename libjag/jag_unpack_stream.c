@@ -1,15 +1,16 @@
-#include <bzlib.h>
 #include <stdlib.h>
 #include <string.h>
 #include "buffer.h"
 #include "jag.h"
 
+/*
+ * Read the header of a .jag archive and perform whole-archive
+ * extraction if necessary.
+ */
 int
 jag_unpack_stream(void *buf, size_t off, size_t len, struct jag_archive *out)
 {
-	bz_stream bz = {0};
-	uint8_t *packed_data = NULL;
-	uint8_t *unpacked_data= NULL;
+	uint8_t *unpacked_data = NULL;
 	int ret;
 
 	if ((ret = jag_read_header(buf, off, len, out)) == -1) {
@@ -24,52 +25,12 @@ jag_unpack_stream(void *buf, size_t off, size_t len, struct jag_archive *out)
 		return 0;
 	}
 
-	if ((packed_data = malloc(out->packed_len +
-	    sizeof(JAG_BZIP2_MAGIC) - 1)) == NULL) {
-		goto fail;
+	unpacked_data = jag_bzip2_decompress(buf + off,
+	    out->packed_len, out->unpacked_len);
+	if (unpacked_data != NULL) {
+		out->data = unpacked_data;
+		out->must_free = 1;
+		return 0;
 	}
-
-	/* fake a bzip2 header to satisfy the library */
-	memcpy(packed_data, JAG_BZIP2_MAGIC, sizeof(JAG_BZIP2_MAGIC) - 1);
-
-	memcpy(packed_data + sizeof(JAG_BZIP2_MAGIC) - 1, buf + off,
-	    out->packed_len);
-
-	unpacked_data = malloc(out->unpacked_len);
-	if (unpacked_data == NULL) {
-		return -1;
-	}
-
-	bz.next_in = (char *)packed_data;
-	bz.avail_in = out->packed_len + sizeof(JAG_BZIP2_MAGIC) - 1;
-	bz.next_out = (char *)unpacked_data;
-	bz.avail_out = out->unpacked_len;
-
-	if (BZ2_bzDecompressInit(&bz, 0, 0) != BZ_OK) {
-		goto fail;
-	}
-
-	while (bz.avail_out > 0) {
-		ret = BZ2_bzDecompress(&bz);
-		switch (ret) {
-		case BZ_OK:
-			continue;
-		case BZ_STREAM_END:
-			break;
-		default:
-			goto fail;
-		}
-	}
-
-	BZ2_bzDecompressEnd(&bz);
-	free(packed_data);
-
-	out->data = unpacked_data;
-	out->must_free = 1;
-	return 0;
-fail:
-	BZ2_bzDecompressEnd(&bz);
-	free(packed_data);
-	free(unpacked_data);
 	return -1;
 }

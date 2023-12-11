@@ -41,5 +41,6 @@ int jag_unpack_entry(struct jag_entry *);
 uint32_t jag_hash_entry_name(const char *);
 int jag_read_header(void *, size_t, size_t, struct jag_archive *);
 int jag_read_entry(void *, size_t, size_t, struct jag_entry *);
+void *jag_bzip2_decompress(void *, size_t, size_t);
 
 #endif
