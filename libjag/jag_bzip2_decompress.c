@@ -25,7 +25,7 @@ jag_bzip2_decompress(void *buf, size_t packed_len, size_t unpacked_len)
 
 	unpacked_data = malloc(unpacked_len);
 	if (unpacked_data == NULL) {
-		goto fail; 
+		goto fail;
 	}
 
 	bz.next_in = (char *)packed_data;
