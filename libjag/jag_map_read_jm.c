@@ -69,4 +69,6 @@ jag_map_read_jm(struct jag_map *out, void *b, size_t len) {
 		}
 		out->tiles[i++].loc_direction = val;
 	}
+
+	return 0;
 }

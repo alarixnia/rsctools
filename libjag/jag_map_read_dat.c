@@ -7,7 +7,6 @@ jag_map_read_dat(struct jag_map *out, void *b, size_t len, int version) {
 	uint8_t val = 0;
 	uint8_t last_val = 0;
 	unsigned i, j;
-	unsigned x, y;
 
 	/*
 	 * maps.jag versions after 52 do not use run-length encoding
