@@ -1,3 +1,4 @@
+OBJS+=	jag_bzip2_decompress.lo
 OBJS+=	jag_find_entry.lo
 OBJS+=	jag_get_known_hash.lo
 OBJS+=	jag_get_known_name.lo
@@ -25,6 +26,7 @@ LIBTOOL?=	libtool
 PREFIX?=	/usr/local
 
 CFLAGS+=	-Wall
+CFLAGS+=	-g -Og
 
 CPPFLAGS+=	-I../include
 
