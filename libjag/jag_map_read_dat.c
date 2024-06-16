@@ -18,10 +18,10 @@ jag_map_read_dat(struct jag_map *out, void *b, size_t len, int version) {
 			return -1;
 		}
 		if (version > 53 || val < 128) {
-			out->tiles[i++].bound_vert = val;
+			out->tiles[i++].bound_horiz = val;
 		} else {
 			for (j = 0; j < (val - 128); ++j) {
-				out->tiles[i++].bound_vert = 0; 
+				out->tiles[i++].bound_horiz = 0;
 			}
 		}
 	}
@@ -31,10 +31,10 @@ jag_map_read_dat(struct jag_map *out, void *b, size_t len, int version) {
 			return -1;
 		}
 		if (version > 53 || val < 128) {
-			out->tiles[i++].bound_horiz = val;
+			out->tiles[i++].bound_vert = val;
 		} else {
 			for (j = 0; j < (val - 128); ++j) {
-				out->tiles[i++].bound_horiz = 0; 
+				out->tiles[i++].bound_vert = 0;
 			}
 		}
 	}
