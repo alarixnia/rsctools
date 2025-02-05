@@ -5,26 +5,27 @@ int
 jag_map_read_jm(struct jag_map *out, void *b, size_t len) {
 	size_t offset = 0;
 	int prev = 0;
+	int8_t sval = 0;
 	uint8_t val = 0;
 	uint16_t val_big = 0;
 	unsigned i;
 
 	for (i = 0; i < JAG_MAP_CHUNK_AREA;) {
-		if (jag_getu8(b, offset++, len, &val) != 0) {
+		if (jag_gets8(b, offset++, len, &sval) != 0) {
 			return -1;
 		}
-		prev += val;
-		out->tiles[i++].height = val & 0xff;
+		prev += sval;
+		out->tiles[i++].height = prev & 0xff;
 	}
 
-	val = 0;
+	prev = 0;
 
 	for (i = 0; i < JAG_MAP_CHUNK_AREA;) {
-		if (jag_getu8(b, offset++, len, &val) != 0) {
+		if (jag_gets8(b, offset++, len, &sval) != 0) {
 			return -1;
 		}
-		prev += val;
-		out->tiles[i++].colour = val & 0xff;
+		prev += sval;
+		out->tiles[i++].colour = prev & 0xff;
 	}
 
 	for (i = 0; i < JAG_MAP_CHUNK_AREA;) {
