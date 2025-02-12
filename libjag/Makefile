@@ -11,7 +11,6 @@ OBJS+=	jag_map_read_dat.lo
 OBJS+=	jag_map_read_hei.lo
 OBJS+=	jag_map_read_jm.lo
 OBJS+=	jag_map_read_loc.lo
-OBJS+=	jag_map_write_jm.lo
 OBJS+=	jag_putu16.lo
 OBJS+=	jag_putu24.lo
 OBJS+=	jag_putu32.lo
@@ -41,6 +40,13 @@ libjag.la: $(OBJS)
 
 .c.lo:
 	$(LIBTOOL) --quiet --mode=compile --tag=CC $(CC) $(CFLAGS) $(CPPFLAGS) -c $<
+
+install:
+	mkdir -p $(DESTDIR)$(PREFIX)/include/libjag
+	mkdir -p $(DESTDIR)$(PREFIX)/lib
+	$(LIBTOOL) --quiet --tag=CC --mode=install \
+		cp -p libjag.la $(DESTDIR)$(PREFIX)/lib
+	cp -p ../include/*.h $(DESTDIR)$(PREFIX)/include/libjag
 
 clean:
 	rm -f *.lo *.la *.o
