@@ -6,6 +6,7 @@ OBJS+=	jag_getu16.lo
 OBJS+=	jag_getu24.lo
 OBJS+=	jag_getu32.lo
 OBJS+=	jag_getu8.lo
+OBJS+=	jag_gets8.lo
 OBJS+=	jag_hash_entry_name.lo
 OBJS+=	jag_map_read_dat.lo
 OBJS+=	jag_map_read_hei.lo

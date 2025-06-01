@@ -17,11 +17,23 @@ jag_map_read_dat(struct jag_map *out, void *b, size_t len, int version) {
 		if (jag_getu8(b, offset++, len, &val) != 0) {
 			return -1;
 		}
-		if (version > 53 || val < 128) {
+		if (version > 53) {
 			out->tiles[i++].bound_horiz = val;
+		} else if (version > 45) {
+			if (val < 192) {
+				out->tiles[i++].bound_horiz = val;
+			} else {
+				for (j = 0; j < (val - 192); ++j) {
+					out->tiles[i++].bound_horiz = 0;
+				}
+			}
 		} else {
-			for (j = 0; j < (val - 128); ++j) {
-				out->tiles[i++].bound_horiz = 0;
+			if (val < 128) {
+				out->tiles[i++].bound_horiz = val;
+			} else {
+				for (j = 0; j < (val - 128); ++j) {
+					out->tiles[i++].bound_horiz = 0;
+				}
 			}
 		}
 	}
@@ -30,11 +42,23 @@ jag_map_read_dat(struct jag_map *out, void *b, size_t len, int version) {
 		if (jag_getu8(b, offset++, len, &val) != 0) {
 			return -1;
 		}
-		if (version > 53 || val < 128) {
+		if (version > 53) {
 			out->tiles[i++].bound_vert = val;
+		} else if (version > 45) {
+			if (val < 192) {
+				out->tiles[i++].bound_vert = val;
+			} else {
+				for (j = 0; j < (val - 192); ++j) {
+					out->tiles[i++].bound_vert = 0;
+				}
+			}
 		} else {
-			for (j = 0; j < (val - 128); ++j) {
-				out->tiles[i++].bound_vert = 0;
+			if (val < 128) {
+				out->tiles[i++].bound_vert = val;
+			} else {
+				for (j = 0; j < (val - 128); ++j) {
+					out->tiles[i++].bound_vert = 0;
+				}
 			}
 		}
 	}
@@ -43,11 +67,23 @@ jag_map_read_dat(struct jag_map *out, void *b, size_t len, int version) {
 		if (jag_getu8(b, offset++, len, &val) != 0) {
 			return -1;
 		}
-		if (version > 53 || val < 128) {
+		if (version > 53) {
 			out->tiles[i++].bound_diag = val;
+		} else if (version > 45) {
+			if (val < 192) {
+				out->tiles[i++].bound_diag = val;
+			} else {
+				for (j = 0; j < (val - 192); ++j) {
+					out->tiles[i++].bound_diag = 0;
+				}
+			}
 		} else {
-			for (j = 0; j < (val - 128); ++j) {
-				out->tiles[i++].bound_diag = 0; 
+			if (val < 128) {
+				out->tiles[i++].bound_diag = val;
+			} else {
+				for (j = 0; j < (val - 128); ++j) {
+					out->tiles[i++].bound_diag = 0;
+				}
 			}
 		}
 	}
@@ -56,14 +92,22 @@ jag_map_read_dat(struct jag_map *out, void *b, size_t len, int version) {
 		if (jag_getu8(b, offset++, len, &val) != 0) {
 			return -1;
 		}
-		if (version > 53 || val < 128) {
-			if (val > 0) {
-				out->tiles[i].bound_diag = val +
+		if (version > 53) {
+			out->tiles[i++].bound_diag = val + JAG_MAP_DIAG_INVERSE;
+		} else if (version > 45) {
+			if (val < 192) {
+				out->tiles[i++].bound_diag = val +
 				    JAG_MAP_DIAG_INVERSE;
+			} else {
+				i += (val - 192);
 			}
-			i++;
 		} else {
-			i += (val - 128);
+			if (val < 128) {
+				out->tiles[i++].bound_diag = val +
+				    JAG_MAP_DIAG_INVERSE;
+			} else {
+				i += (val - 128);
+			}
 		}
 	}
 
