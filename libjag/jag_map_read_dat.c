@@ -93,7 +93,11 @@ jag_map_read_dat(struct jag_map *out, void *b, size_t len, int version) {
 			return -1;
 		}
 		if (version > 53) {
-			out->tiles[i++].bound_diag = val + JAG_MAP_DIAG_INVERSE;
+			if (val > 0) {
+				out->tiles[i].bound_diag = val +
+				    JAG_MAP_DIAG_INVERSE;
+			}
+			i++;
 		} else if (version > 45) {
 			if (val < 192) {
 				out->tiles[i++].bound_diag = val +
