@@ -5,7 +5,7 @@
 int
 jag_putu32(void *b, size_t offset, size_t buflen, uint32_t in)
 {
-	uint8_t *buffer = b;
+	uint8_t *buffer = b + offset;
 	if (offset > (SSIZE_MAX - 4) ||
 	    ((ssize_t)buflen - (ssize_t)offset) < 4) {
 		return -1;

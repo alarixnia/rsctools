@@ -10,6 +10,6 @@ jag_putu8(void *b, size_t offset, size_t buflen, uint8_t in)
 	    ((ssize_t)buflen - (ssize_t)offset) < 1) {
 		return -1;
 	}
-	*(buffer++) = (uint8_t)in;
+	buffer[offset] = in;
 	return 0;
 }
