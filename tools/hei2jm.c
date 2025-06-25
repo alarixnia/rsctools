@@ -85,6 +85,49 @@ read_npcs_txt(struct jag_map *m, const char *path, int global_x, int global_y)
 	fclose(f);
 }
 
+static void
+read_objs_txt(struct jag_map *m, const char *path, int global_x, int global_y)
+{
+	char *str;
+	char line[1024];
+	int ret;
+	int x, y, id, stack;
+	FILE *f;
+
+	f = fopen(path, "r");
+	if (f == NULL) {
+		fprintf(stderr,
+		    "open obj txt failed: %s\n", strerror(errno));
+		return;
+	}
+	for (;;) {
+		str = fgets(line, sizeof(line), f);
+		if (str == NULL) {
+			break;
+		}
+		if (line[0] == ';') {
+			continue;
+		}
+		ret = sscanf(line, "%d %d %d %d\n", &x, &y, &id, &stack);
+		if (ret == 0) {
+			break;
+		}
+		x -= global_x;
+		y -= global_y;
+		if (x < 0 || y < 0 || x >= JAG_MAP_CHUNK_SIZE ||
+		    y >= JAG_MAP_CHUNK_SIZE) {
+			continue;
+		}
+		m->tiles[y + x * JAG_MAP_CHUNK_SIZE].loc_direction = stack;
+		if (m->tiles[y + x * JAG_MAP_CHUNK_SIZE].bound_diag > 0) {
+			y++;
+		}
+		m->tiles[y + x * JAG_MAP_CHUNK_SIZE].bound_diag =
+		    JAG_MAP_DIAG_ITEM + id + 1;
+	}
+	fclose(f);
+}
+
 int main(int argc, char **argv)
 {
 	FILE *out;
@@ -168,6 +211,10 @@ int main(int argc, char **argv)
 
 	if (loc_path != NULL) {
 		read_locs_txt(&m, loc_path, global_x, global_y);
+	}
+
+	if (obj_path != NULL) {
+		read_objs_txt(&m, obj_path, global_x, global_y);
 	}
 
 	if (npc_path != NULL) {
