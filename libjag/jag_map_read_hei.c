@@ -25,12 +25,12 @@ jag_map_read_hei(struct jag_map *out, void *b, size_t len) {
 
 	prev = 64;
 
-	for (x = 0; x < JAG_MAP_CHUNK_SIZE; ++x) {
-		for (y = 0; y < JAG_MAP_CHUNK_SIZE; ++y) {
+	for (y = 0; y < JAG_MAP_CHUNK_SIZE; ++y) {
+		for (x = 0; x < JAG_MAP_CHUNK_SIZE; ++x) {
 			i = x * JAG_MAP_CHUNK_SIZE + y;
 
 			prev = (out->tiles[i].height + prev) & 127;
-			out->tiles[i].height = prev * 2;
+			out->tiles[i].height = (prev * 2) & 0xFF;
 		}
 	}
 
@@ -52,12 +52,12 @@ jag_map_read_hei(struct jag_map *out, void *b, size_t len) {
 
 	prev = 35;
 
-	for (x = 0; x < JAG_MAP_CHUNK_SIZE; ++x) {
-		for (y = 0; y < JAG_MAP_CHUNK_SIZE; ++y) {
+	for (y = 0; y < JAG_MAP_CHUNK_SIZE; ++y) {
+		for (x = 0; x < JAG_MAP_CHUNK_SIZE; ++x) {
 			i = x * JAG_MAP_CHUNK_SIZE + y;
 
 			prev = (out->tiles[i].colour + prev) & 127;
-			out->tiles[i].colour = prev * 2;
+			out->tiles[i].colour = (prev * 2) & 0xFF;
 		}
 	}
 
