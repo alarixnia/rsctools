@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <libgen.h>
+#include <stdbool.h>
 #include <map.h>
 #include "utility.h"
 
@@ -204,6 +205,7 @@ int main(int argc, char **argv)
 	const char *loc_path = NULL;
 	const char *obj_path = NULL;
 	const char *npc_path = NULL;
+	bool no_land = false;
 
 	while ((ch = getopt(argc, argv, "b:l:o:n:v:")) != -1) {
 		switch (ch) {
@@ -241,8 +243,9 @@ int main(int argc, char **argv)
 
 	hei_data = read_file_full(argv[0], &l1);
 	if (hei_data == NULL) {
-		fprintf(stderr, "read map .hei failed: %s\n", strerror(errno));
-		return 1;
+		fprintf(stderr, "read land .hei failed: %s", strerror(errno));
+		fprintf(stderr, " - will fill with blank\n");
+		no_land = true;
 	}
 
 	dat_data = read_file_full(argv[1], &l2);
@@ -259,7 +262,7 @@ int main(int argc, char **argv)
 	global_y = (plane * PLANE_LEVEL_INC) +
 	    ((chunk_y - 37) * JAG_MAP_CHUNK_SIZE);
 
-	if (jag_map_read_hei(&m, hei_data, l1) != 0) {
+	if (!no_land && jag_map_read_hei(&m, hei_data, l1) != 0) {
 		fprintf(stderr, "parse map .hei failed\n");
 		return 1;
 	}
