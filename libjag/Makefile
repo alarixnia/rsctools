@@ -12,6 +12,7 @@ OBJS+=	jag_map_read_dat.lo
 OBJS+=	jag_map_read_hei.lo
 OBJS+=	jag_map_read_jm.lo
 OBJS+=	jag_map_read_loc.lo
+OBJS+=	jag_map_write_jm.lo
 OBJS+=	jag_putu16.lo
 OBJS+=	jag_putu24.lo
 OBJS+=	jag_putu32.lo

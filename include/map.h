@@ -40,5 +40,6 @@ int jag_map_read_jm(struct jag_map *, void *, size_t);
 int jag_map_read_hei(struct jag_map *, void *, size_t);
 int jag_map_read_loc(struct jag_map *, void *, size_t);
 int jag_map_read_dat(struct jag_map *, void *, size_t, int);
+int jag_map_write_jm(struct jag_map *, void *, size_t);
 
 #endif
