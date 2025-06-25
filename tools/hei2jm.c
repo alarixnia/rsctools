@@ -11,6 +11,13 @@
 #define PLANE_LEVEL_INC (944)
 #endif
 
+enum bound_dir {
+	BOUND_DIR_VERT		= 0,
+	BOUND_DIR_HORIZ		= 1,
+	BOUND_DIR_DIAG_NW_SE	= 2,
+	BOUND_DIR_DIAG_NE_SW	= 3,
+};
+
 static void __dead
 usage(void)     
 {                       
@@ -128,6 +135,59 @@ read_objs_txt(struct jag_map *m, const char *path, int global_x, int global_y)
 	fclose(f);
 }
 
+static void
+read_bounds_txt(struct jag_map *m, const char *path, int global_x, int global_y)
+{
+	char *str;
+	char line[1024];
+	int ret;
+	int x, y, dir, id;
+	FILE *f;
+
+	f = fopen(path, "r");
+	if (f == NULL) {
+		fprintf(stderr,
+		    "open bound txt failed: %s\n", strerror(errno));
+		return;
+	}
+	for (;;) {
+		str = fgets(line, sizeof(line), f);
+		if (str == NULL) {
+			break;
+		}
+		if (line[0] == ';') {
+			continue;
+		}
+		ret = sscanf(line, "%d %d %d %d\n", &x, &y, &dir, &id);
+		if (ret == 0) {
+			break;
+		}
+		x -= global_x;
+		y -= global_y;
+		if (x < 0 || y < 0 || x >= JAG_MAP_CHUNK_SIZE ||
+		    y >= JAG_MAP_CHUNK_SIZE) {
+			continue;
+		}
+		int idx = y + x * JAG_MAP_CHUNK_SIZE;
+		switch (dir) {
+		case BOUND_DIR_VERT:
+			m->tiles[idx].bound_vert = id + 1;
+			break;
+		case BOUND_DIR_HORIZ:
+			m->tiles[idx].bound_horiz = id + 1;
+			break;
+		case BOUND_DIR_DIAG_NW_SE:
+			m->tiles[idx].bound_diag = id + 1;
+			break;
+		case BOUND_DIR_DIAG_NE_SW:
+			m->tiles[idx].bound_diag =
+			    id + 1 + JAG_MAP_DIAG_INVERSE;
+			break;
+		}
+	}
+	fclose(f);
+}
+
 int main(int argc, char **argv)
 {
 	FILE *out;
@@ -219,6 +279,10 @@ int main(int argc, char **argv)
 
 	if (npc_path != NULL) {
 		read_npcs_txt(&m, npc_path, global_x, global_y);
+	}
+
+	if (bound_path != NULL) {
+		read_bounds_txt(&m, bound_path, global_x, global_y);
 	}
 
 	if (jag_map_write_jm(&m, jm_data, JAG_MAP_JM_FILE_LEN) != 0) {
