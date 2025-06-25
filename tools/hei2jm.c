@@ -18,6 +18,73 @@ usage(void)
 	exit(1);
 }
 
+static void
+read_locs_txt(struct jag_map *m, const char *path, int global_x, int global_y)
+{
+	int ret;
+	int x, y, id;
+	FILE *f;
+
+	f = fopen(path, "r");
+	if (f == NULL) {
+		fprintf(stderr,
+		    "open loc txt failed: %s\n", strerror(errno));
+		return;
+	}
+	for (;;) {
+		ret = fscanf(f, "%d %d %d\n", &x, &y, &id);
+		if (ret == 0 || ret == EOF) {
+			break;
+		}
+		x -= global_x;
+		y -= global_y;
+		if (x > 0 && y > 0 &&
+		    x < JAG_MAP_CHUNK_SIZE && y < JAG_MAP_CHUNK_SIZE) {
+			m->tiles[y + x * JAG_MAP_CHUNK_SIZE].bound_diag =
+			    JAG_MAP_DIAG_LOC + id + 1;
+		}
+	}
+	fclose(f);
+}
+
+static void
+read_npcs_txt(struct jag_map *m, const char *path, int global_x, int global_y)
+{
+	char *str;
+	char line[1024];
+	int ret;
+	int x, y, id;
+	FILE *f;
+
+	f = fopen(path, "r");
+	if (f == NULL) {
+		fprintf(stderr,
+		    "open npc txt failed: %s\n", strerror(errno));
+		return;
+	}
+	for (;;) {
+		str = fgets(line, sizeof(line), f);
+		if (str == NULL) {
+			break;
+		}
+		if (line[0] == ';') {
+			continue;
+		}
+		ret = sscanf(line, "%d %d %d\n", &id, &x, &y);
+		if (ret == 0) {
+			break;
+		}
+		x -= global_x;
+		y -= global_y;
+		if (x > 0 && y > 0 &&
+		    x < JAG_MAP_CHUNK_SIZE && y < JAG_MAP_CHUNK_SIZE) {
+			m->tiles[y + x * JAG_MAP_CHUNK_SIZE].bound_diag =
+			    JAG_MAP_DIAG_NPC + id + 1;
+		}
+	}
+	fclose(f);
+}
+
 int main(int argc, char **argv)
 {
 	FILE *out;
@@ -100,30 +167,11 @@ int main(int argc, char **argv)
 	}
 
 	if (loc_path != NULL) {
-		int ret;
-		int x, y, id;
-		FILE *f;
+		read_locs_txt(&m, loc_path, global_x, global_y);
+	}
 
-		f = fopen(loc_path, "r");
-		if (f == NULL) {
-			fprintf(stderr,
-			    "open loc txt failed: %s\n", strerror(errno));
-			return 1;
-		}
-		for (;;) {
-			ret = fscanf(f, "%d %d %d\n", &x, &y, &id);
-			if (ret == 0 || ret == EOF) {
-				break;
-			}
-			x -= global_x;
-			y -= global_y;
-			if (x > 0 && y > 0 &&
-			    x < JAG_MAP_CHUNK_SIZE && y < JAG_MAP_CHUNK_SIZE) {
-				m.tiles[y + x * JAG_MAP_CHUNK_SIZE].bound_diag =
-				    JAG_MAP_DIAG_LOC + id + 1;
-			}
-		}
-		fclose(f);
+	if (npc_path != NULL) {
+		read_npcs_txt(&m, npc_path, global_x, global_y);
 	}
 
 	if (jag_map_write_jm(&m, jm_data, JAG_MAP_JM_FILE_LEN) != 0) {
