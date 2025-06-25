@@ -2,7 +2,7 @@ UNJAG_OBJS+=		unjag.o
 
 CRACK_OBJS+=		jag-crack.o
 
-HEI2JM_OBJS+=		hei2jm.o
+HEI2JM_OBJS+=		hei2jm.o utility.o
 
 KNOWN_HASHES_OBJS+=	jag-known-hashes.o
 
