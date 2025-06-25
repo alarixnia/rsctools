@@ -48,7 +48,7 @@ jag_map_write_jm(struct jag_map *in, void *out, size_t len)
 	}
 	for (int i = 0; i < JAG_MAP_CHUNK_AREA; ++i) {
 		if (jag_putu16(b, offset, len,
-		    in->tiles[i].bound_diag & 0xFF) == -1) {
+		    in->tiles[i].bound_diag & 0xFFFF) == -1) {
 			return -1;
 		}
 		offset += 2;
