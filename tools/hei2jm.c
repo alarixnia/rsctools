@@ -26,6 +26,10 @@ static int locs_not_for_water[] = {
 	184, 112, 113, 205, 214, 273
 };
 
+static int coal_trucks_locs[] = {
+	149, 150, 151, 152, 153
+};
+
 #define BED	(15)
 
 enum bound_dir {
@@ -67,6 +71,17 @@ cont:
 		idx = y + x * JAG_MAP_CHUNK_SIZE;
 		if (x > 0 && y > 0 &&
 		    x < JAG_MAP_CHUNK_SIZE && y < JAG_MAP_CHUNK_SIZE) {
+			if (version < 41 && global_y < PLANE_LEVEL_INC) {
+				size_t sz;
+
+				sz = sizeof(coal_trucks_locs) /
+				    sizeof(coal_trucks_locs[0]);
+				for (int i = 0; i < sz; ++i) {
+					if (coal_trucks_locs[i] == id) {
+						goto cont;
+					}
+				}
+			}
 			if (version < 48 && m->tiles[idx].overlay == 0 &&
 			    id == BED) {
 				continue;
@@ -74,12 +89,11 @@ cont:
 			if (version < 63 && (m->tiles[idx].overlay == WATER ||
 			    (m->tiles[idx].overlay == BLANK &&
 			    global_y > PLANE_LEVEL_INC))) {
-				int i;
 				size_t sz;
 
 				sz = sizeof(locs_not_for_water) /
 				    sizeof(locs_not_for_water[0]);
-				for (i = 0; i < sz; ++i) {
+				for (int i = 0; i < sz; ++i) {
 					if (locs_not_for_water[i] == id) {
 						goto cont;
 					}
