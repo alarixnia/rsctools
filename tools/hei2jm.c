@@ -8,9 +8,25 @@
 #include <map.h>
 #include "utility.h"
 
+#define WATER	(2)
+#define BLANK	(8)
+
 #ifndef PLANE_LEVEL_INC
 #define PLANE_LEVEL_INC (944)
 #endif
+
+static int version = 63;
+
+/*
+ * used for cleaning up when converting a full list of
+ * loc spawns to older land data
+ */
+static int locs_not_for_water[] = {
+	0, 1, 21, 32, 33, 34, 37, 38, 41, 51, 63, 64, 110, 111, 183,
+	184, 112, 113, 205, 214, 273
+};
+
+#define BED	(15)
 
 enum bound_dir {
 	BOUND_DIR_VERT		= 0,
@@ -40,16 +56,36 @@ read_locs_txt(struct jag_map *m, const char *path, int global_x, int global_y)
 		return;
 	}
 	for (;;) {
+		int idx;
+cont:
 		ret = fscanf(f, "%d %d %d\n", &x, &y, &id);
 		if (ret == 0 || ret == EOF) {
 			break;
 		}
 		x -= global_x;
 		y -= global_y;
+		idx = y + x * JAG_MAP_CHUNK_SIZE;
 		if (x > 0 && y > 0 &&
 		    x < JAG_MAP_CHUNK_SIZE && y < JAG_MAP_CHUNK_SIZE) {
-			m->tiles[y + x * JAG_MAP_CHUNK_SIZE].bound_diag =
-			    JAG_MAP_DIAG_LOC + id + 1;
+			if (version < 48 && m->tiles[idx].overlay == 0 &&
+			    id == BED) {
+				continue;
+			}
+			if (version < 63 && (m->tiles[idx].overlay == WATER ||
+			    (m->tiles[idx].overlay == BLANK &&
+			    global_y > PLANE_LEVEL_INC))) {
+				int i;
+				size_t sz;
+
+				sz = sizeof(locs_not_for_water) /
+				    sizeof(locs_not_for_water[0]);
+				for (i = 0; i < sz; ++i) {
+					if (locs_not_for_water[i] == id) {
+						goto cont;
+					}
+				}
+			}
+			m->tiles[idx].bound_diag = JAG_MAP_DIAG_LOC + id + 1;
 		}
 	}
 	fclose(f);
@@ -63,6 +99,7 @@ read_npcs_txt(struct jag_map *m, const char *path, int global_x, int global_y)
 	int ret;
 	int x, y, id;
 	FILE *f;
+	int idx;
 
 	f = fopen(path, "r");
 	if (f == NULL) {
@@ -84,11 +121,17 @@ read_npcs_txt(struct jag_map *m, const char *path, int global_x, int global_y)
 		}
 		x -= global_x;
 		y -= global_y;
-		if (x > 0 && y > 0 &&
-		    x < JAG_MAP_CHUNK_SIZE && y < JAG_MAP_CHUNK_SIZE) {
-			m->tiles[y + x * JAG_MAP_CHUNK_SIZE].bound_diag =
-			    JAG_MAP_DIAG_NPC + id + 1;
+		if (x < 0 || y < 0 || x >= JAG_MAP_CHUNK_SIZE ||
+		    y >= JAG_MAP_CHUNK_SIZE) {
+			continue;
 		}
+		idx = y + x * JAG_MAP_CHUNK_SIZE;
+		if (version < 63 && (m->tiles[idx].overlay == WATER ||
+		    (m->tiles[idx].overlay == BLANK &&
+		    global_y > PLANE_LEVEL_INC))) {
+			continue;
+		}
+		m->tiles[idx].bound_diag = JAG_MAP_DIAG_NPC + id + 1;
 	}
 	fclose(f);
 }
@@ -100,6 +143,7 @@ read_objs_txt(struct jag_map *m, const char *path, int global_x, int global_y)
 	char line[1024];
 	int ret;
 	int x, y, id, stack;
+	int idx;
 	FILE *f;
 
 	f = fopen(path, "r");
@@ -126,8 +170,14 @@ read_objs_txt(struct jag_map *m, const char *path, int global_x, int global_y)
 		    y >= JAG_MAP_CHUNK_SIZE) {
 			continue;
 		}
-		m->tiles[y + x * JAG_MAP_CHUNK_SIZE].loc_direction = stack;
-		if (m->tiles[y + x * JAG_MAP_CHUNK_SIZE].bound_diag > 0) {
+		idx = y + x * JAG_MAP_CHUNK_SIZE;
+		if (version < 63 && (m->tiles[idx].overlay == WATER ||
+		    (m->tiles[idx].overlay == BLANK &&
+		    global_y > PLANE_LEVEL_INC))) {
+			continue;
+		}
+		m->tiles[idx].loc_direction = stack;
+		if (m->tiles[idx].bound_diag > 0) {
 			y++;
 		}
 		m->tiles[y + x * JAG_MAP_CHUNK_SIZE].bound_diag =
@@ -170,19 +220,32 @@ read_bounds_txt(struct jag_map *m, const char *path, int global_x, int global_y)
 			continue;
 		}
 		int idx = y + x * JAG_MAP_CHUNK_SIZE;
+		if (version < 63 && (m->tiles[idx].overlay == WATER ||
+		    (m->tiles[idx].overlay == BLANK &&
+		    global_y > PLANE_LEVEL_INC))) {
+			continue;
+		}
 		switch (dir) {
 		case BOUND_DIR_VERT:
-			m->tiles[idx].bound_vert = id + 1;
+			if (m->tiles[idx].bound_vert == 0) {
+				m->tiles[idx].bound_vert = id + 1;
+			}
 			break;
 		case BOUND_DIR_HORIZ:
-			m->tiles[idx].bound_horiz = id + 1;
+			if (m->tiles[idx].bound_horiz == 0) {
+				m->tiles[idx].bound_horiz = id + 1;
+			}
 			break;
 		case BOUND_DIR_DIAG_NW_SE:
-			m->tiles[idx].bound_diag = id + 1;
+			if (m->tiles[idx].bound_diag == 0) {
+				m->tiles[idx].bound_diag = id + 1;
+			}
 			break;
 		case BOUND_DIR_DIAG_NE_SW:
-			m->tiles[idx].bound_diag =
-			    id + 1 + JAG_MAP_DIAG_INVERSE;
+			if (m->tiles[idx].bound_diag == 0) {
+				m->tiles[idx].bound_diag =
+				    id + 1 + JAG_MAP_DIAG_INVERSE;
+			}
 			break;
 		}
 	}
@@ -193,7 +256,6 @@ int main(int argc, char **argv)
 {
 	FILE *out;
 	char ch;
-	int version = 63;
 	struct jag_map m = {0};
 	int plane = 0, chunk_x = 50, chunk_y = 50;
 	int global_x, global_y;
