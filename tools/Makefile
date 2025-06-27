@@ -6,8 +6,9 @@ HEI2JM_OBJS+=		hei2jm.o utility.o
 
 KNOWN_HASHES_OBJS+=	jag-known-hashes.o
 
-CFLAGS+=	-Og -g
+CFLAGS+=	-std=c99
 CFLAGS+=	-Wall
+CFLAGS+=	-Og -g
 CFLAGS+=	-fsanitize=undefined
 
 CPPFLAGS+=	-I../include

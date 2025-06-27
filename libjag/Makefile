@@ -26,6 +26,7 @@ OBJS+=	jag_unpack_stream.lo
 LIBTOOL?=	libtool
 PREFIX?=	/usr/local
 
+CFLAGS+=	-std=c99
 CFLAGS+=	-Wall
 CFLAGS+=	-g -Og
 
