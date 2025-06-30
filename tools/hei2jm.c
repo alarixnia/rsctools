@@ -22,8 +22,8 @@ static int version = 63;
  * loc spawns to older land data
  */
 static int locs_not_for_water[] = {
-	0, 1, 21, 32, 33, 34, 37, 38, 41, 51, 63, 64, 110, 111, 183,
-	184, 112, 113, 205, 214, 273
+	0, 1, 21, 32, 33, 34, 37, 38, 41, 51, 55, 63, 64, 110, 111, 183,
+	184, 112, 113, 118, 205, 209, 214, 273
 };
 
 static int coal_trucks_locs[] = {
@@ -142,7 +142,10 @@ read_npcs_txt(struct jag_map *m, const char *path, int global_x, int global_y)
 		idx = y + x * JAG_MAP_CHUNK_SIZE;
 		if (version < 63 && (m->tiles[idx].overlay == WATER ||
 		    (m->tiles[idx].overlay == BLANK &&
-		    global_y > PLANE_LEVEL_INC))) {
+		    global_y > PLANE_LEVEL_INC)) &&
+		    m->tiles[idx].bound_horiz == 0 &&
+		    m->tiles[idx].bound_vert == 0 &&
+		    m->tiles[idx].bound_diag == 0) {
 			continue;
 		}
 		m->tiles[idx].bound_diag = JAG_MAP_DIAG_NPC + id + 1;
