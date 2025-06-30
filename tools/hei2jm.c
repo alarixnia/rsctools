@@ -26,6 +26,10 @@ static int locs_not_for_water[] = {
 	184, 112, 113, 118, 205, 209, 214, 273
 };
 
+static int locs_not_for_surface[] = {
+	3, 7, 10, 11, 24, 27, 41, 42, 43, 44, 47, 48, 145, 273, 280
+};
+
 static int coal_trucks_locs[] = {
 	149, 150, 151, 152, 153
 };
@@ -86,6 +90,11 @@ cont:
 			    id == BED) {
 				continue;
 			}
+			if (version < 49 && global_x == 96 && global_y == 672 &&
+			    id >= 98 && id <= 115) {
+				/* no lumbridge swamp mine */
+				goto cont;
+			}
 			if (version < 63 && (m->tiles[idx].overlay == WATER ||
 			    (m->tiles[idx].overlay == BLANK &&
 			    global_y > PLANE_LEVEL_INC))) {
@@ -99,10 +108,17 @@ cont:
 					}
 				}
 			}
-			if (version < 70 && global_x == 96 && global_y == 672 &&
-			    id >= 98 && id <= 115) {
-				/* no lumbridge swamp mine */
-				goto cont;
+			if (version < 63 && m->tiles[idx].overlay == 0 &&
+			    global_y < PLANE_LEVEL_INC) {
+				size_t sz;
+
+				sz = sizeof(locs_not_for_surface) /
+				    sizeof(locs_not_for_surface[0]);
+				for (int i = 0; i < sz; ++i) {
+					if (locs_not_for_surface[i] == id) {
+						goto cont;
+					}
+				}
 			}
 			m->tiles[idx].bound_diag = JAG_MAP_DIAG_LOC + id + 1;
 		}
