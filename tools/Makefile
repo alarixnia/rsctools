@@ -4,6 +4,8 @@ CRACK_OBJS+=		jag-crack.o
 
 HEI2JM_OBJS+=		hei2jm.o utility.o
 
+MAPDAT2TXT_OBJS+=	mapdat2txt.o utility.o
+
 KNOWN_HASHES_OBJS+=	jag-known-hashes.o
 
 CFLAGS+=	-std=c99
@@ -18,12 +20,15 @@ LIBS+=		-ljag -lbz2
 
 LIBTOOL?=	libtool
 
-PROGS=		jag-crack jag-known-hashes unjag hei2jm
+PROGS=		jag-crack jag-known-hashes unjag hei2jm mapdat2txt
 
 all: $(PROGS)
 
 .c.o:
 	$(LIBTOOL) --quiet --mode=compile --tag=CC $(CC) $(CFLAGS) $(CPPFLAGS) -c $<
+
+mapdat2txt: $(MAPDAT2TXT_OBJS)
+	$(LIBTOOL) --quiet --mode=link --tag=CC $(CC) $(LDFLAGS) $(LIBS) -o $@ $(MAPDAT2TXT_OBJS)
 
 hei2jm: $(HEI2JM_OBJS)
 	$(LIBTOOL) --quiet --mode=link --tag=CC $(CC) $(LDFLAGS) $(LIBS) -o $@ $(HEI2JM_OBJS)
