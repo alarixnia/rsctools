@@ -99,6 +99,10 @@ cont:
 					}
 				}
 			}
+			if (version < 70 && global_x == 96 && global_y == 672 &&
+			    id >= 98 && id <= 115) {
+				goto cont;
+			}
 			m->tiles[idx].bound_diag = JAG_MAP_DIAG_LOC + id + 1;
 		}
 	}
