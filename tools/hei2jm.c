@@ -69,7 +69,7 @@ cont:
 		x -= global_x;
 		y -= global_y;
 		idx = y + x * JAG_MAP_CHUNK_SIZE;
-		if (x > 0 && y > 0 &&
+		if (x >= 0 && y >= 0 &&
 		    x < JAG_MAP_CHUNK_SIZE && y < JAG_MAP_CHUNK_SIZE) {
 			if (version < 41 && global_y < PLANE_LEVEL_INC) {
 				size_t sz;
@@ -101,6 +101,7 @@ cont:
 			}
 			if (version < 70 && global_x == 96 && global_y == 672 &&
 			    id >= 98 && id <= 115) {
+				/* no lumbridge swamp mine */
 				goto cont;
 			}
 			m->tiles[idx].bound_diag = JAG_MAP_DIAG_LOC + id + 1;
