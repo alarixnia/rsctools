@@ -193,10 +193,11 @@ read_objs_txt(struct jag_map *m, const char *path, int global_x, int global_y)
 		    global_y > PLANE_LEVEL_INC))) {
 			continue;
 		}
-		m->tiles[idx].loc_direction = stack;
 		if (m->tiles[idx].bound_diag > 0) {
 			y++;
 		}
+		m->tiles[y + x * JAG_MAP_CHUNK_SIZE].loc_direction =
+		    stack;
 		m->tiles[y + x * JAG_MAP_CHUNK_SIZE].bound_diag =
 		    JAG_MAP_DIAG_ITEM + id + 1;
 	}
