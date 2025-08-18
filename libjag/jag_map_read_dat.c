@@ -17,7 +17,7 @@ jag_map_read_dat(struct jag_map *out, void *b, size_t len, int version) {
 		if (jag_getu8(b, offset++, len, &val) != 0) {
 			return -1;
 		}
-		if (version > 53) {
+		if (version > 54) {
 			out->tiles[i++].bound_horiz = val;
 		} else if (version > 45) {
 			if (val < 192) {
@@ -42,7 +42,7 @@ jag_map_read_dat(struct jag_map *out, void *b, size_t len, int version) {
 		if (jag_getu8(b, offset++, len, &val) != 0) {
 			return -1;
 		}
-		if (version > 53) {
+		if (version > 54) {
 			out->tiles[i++].bound_vert = val;
 		} else if (version > 45) {
 			if (val < 192) {
@@ -67,7 +67,7 @@ jag_map_read_dat(struct jag_map *out, void *b, size_t len, int version) {
 		if (jag_getu8(b, offset++, len, &val) != 0) {
 			return -1;
 		}
-		if (version > 53) {
+		if (version > 54) {
 			out->tiles[i++].bound_diag = val;
 		} else if (version > 45) {
 			if (val < 192) {
@@ -92,7 +92,7 @@ jag_map_read_dat(struct jag_map *out, void *b, size_t len, int version) {
 		if (jag_getu8(b, offset++, len, &val) != 0) {
 			return -1;
 		}
-		if (version > 53) {
+		if (version > 54) {
 			if (val > 0) {
 				out->tiles[i].bound_diag = val +
 				    JAG_MAP_DIAG_INVERSE;
