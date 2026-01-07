@@ -21,7 +21,7 @@ enum bound_dir {
 	BOUND_DIR_DIAG_NE_SW	= 3,
 };
 
-static void __dead
+static void
 usage(void)     
 {                       
 	fputs("mapdat2txt [-v version] dat\n", stderr);

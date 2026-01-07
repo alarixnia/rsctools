@@ -43,7 +43,7 @@ enum bound_dir {
 	BOUND_DIR_DIAG_NE_SW	= 3,
 };
 
-static void __dead
+static void
 usage(void)     
 {                       
 	fputs("hei2jm [-v version] hei dat jm\n", stderr);
