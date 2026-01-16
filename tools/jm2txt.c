@@ -36,7 +36,7 @@ main(int argc, char **argv)
 	void *dat_data;
 	size_t l1;
 
-	if (argc < 1) {
+	if (argc < 2) {
 		usage();
 	}
 
