@@ -122,14 +122,8 @@ draw_chunk(uint32_t *pixels, unsigned chunkx, unsigned chunky, const struct jag_
 			}
 
 			if (c->tiles[pos].bound_horiz != 0) {
-				if (x > 0 && c->tiles[(x - 1) + y * JAG_MAP_CHUNK_SIZE].overlay == 0) {
-					for (i = 0; i < TILESIZE; ++i) {
-						pixels[(ox - (TILESIZE - 1)) + (oy + i) * XSIZE] = 0x636363;
-					}
-				} else if (x < JAG_MAP_CHUNK_SIZE) {
-					for (i = 0; i < TILESIZE; ++i) {
-						pixels[(ox + (TILESIZE - 1)) + (oy + i) * XSIZE] = 0x636363;
-					}
+				for (i = 0; i < TILESIZE; ++i) {
+					pixels[(ox + (TILESIZE - 1)) + (oy + i) * XSIZE] = 0x636363;
 				}
 			}
 
