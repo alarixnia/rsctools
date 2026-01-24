@@ -11,7 +11,7 @@
 
 #define MAPSTARTX	(48)
 #define MAPSTARTY	(38)
-#define MAPSIZE		(17)
+#define MAPSIZE		(18)
 #define TILESIZE	(3)
 #define XSIZE		((MAPSIZE * JAG_MAP_CHUNK_SIZE) * TILESIZE)
 #define YSIZE		((MAPSIZE * JAG_MAP_CHUNK_SIZE) * TILESIZE)
@@ -115,11 +115,13 @@ draw_chunk(uint32_t *pixels, unsigned chunkx, unsigned chunky, const struct jag_
 			oy = ((chunky * JAG_MAP_CHUNK_SIZE) + x) * TILESIZE;
 			pos = x + y * JAG_MAP_CHUNK_SIZE;
 
+#if 0
 			for (dx = ox; dx < (ox + TILESIZE); ++dx) {
 				for (dy = oy; dy < (oy + TILESIZE); ++dy) {
 					pixels[dx + dy * XSIZE] = colour;
 				}
 			}
+#endif
 
 			if (c->tiles[pos].bound_horiz != 0) {
 				for (i = 0; i < TILESIZE; ++i) {
@@ -143,12 +145,12 @@ draw_chunk(uint32_t *pixels, unsigned chunkx, unsigned chunky, const struct jag_
 						pixels[(ox + i) + (oy + i) * XSIZE] = 0x636363 + i;
 					}
 				} else if (c->tiles[pos].bound_diag >= JAG_MAP_DIAG_LOC) {
-					colour = get_loc_colour(c->tiles[pos].bound_diag - JAG_MAP_DIAG_LOC);
-					pixels[ox + oy * XSIZE] = colour;
-					pixels[(ox + 2) + oy * XSIZE] = colour;
-					pixels[(ox + 1) + (oy - 1) * XSIZE] = colour;
+					colour = get_loc_colour(c->tiles[pos].bound_diag - JAG_MAP_DIAG_LOC - 1);
 					pixels[(ox + 1) + (oy + 1) * XSIZE] = colour;
-					pixels[(ox + 1) + oy * XSIZE] = colour;
+					pixels[(ox + 3) + (oy + 1) * XSIZE] = colour;
+					pixels[(ox + 2) + (oy - 0) * XSIZE] = colour;
+					pixels[(ox + 2) + (oy + 2) * XSIZE] = colour;
+					pixels[(ox + 2) + (oy + 1) * XSIZE] = colour;
 				}
 			}
 		}
