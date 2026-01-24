@@ -10,7 +10,7 @@
 /* quite old code, predates libjag... */
 
 #define MAPSTARTX	(48)
-#define MAPSTARTY	(39)
+#define MAPSTARTY	(38)
 #define MAPSIZE		(17)
 #define TILESIZE	(3)
 #define XSIZE		((MAPSIZE * JAG_MAP_CHUNK_SIZE) * TILESIZE)
